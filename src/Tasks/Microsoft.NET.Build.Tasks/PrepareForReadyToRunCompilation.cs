@@ -459,6 +459,15 @@ namespace Microsoft.NET.Build.Tasks
                 _crossgenPath = Path.Combine(_packagePath, "tools", "crossgen");
                 _clrjitPath = Path.Combine(_packagePath, "runtimes", _runtimeIdentifier, "native", "libclrjit.dylib");
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("FREEBSD")))
+            {
+                // Only x64 supported for FreeBSD
+                if (_targetArchitecture != Architecture.X64 || RuntimeInformation.OSArchitecture != Architecture.X64)
+                    return false;
+
+                _crossgenPath = Path.Combine(_packagePath, "tools", "crossgen");
+                _clrjitPath = Path.Combine(_packagePath, "runtimes", _runtimeIdentifier, "native", "libclrjit.so");
+            }
             else
             {
                 // Unknown platform
